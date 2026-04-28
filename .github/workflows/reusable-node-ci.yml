@@ -19,6 +19,10 @@ on:
         required: false
         type: string
         default: ""
+      use-npm-cache:
+        required: false
+        type: boolean
+        default: true
       install-command:
         required: false
         type: string
@@ -55,12 +59,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
-      - name: Set up Node.js
+      - name: Set up Node.js with npm cache
+        if: inputs.use-npm-cache
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
           cache-dependency-path: ${{ inputs.cache-dependency-path != '' && inputs.cache-dependency-path || format('{0}/package-lock.json', inputs.working-directory) }}
+
+      - name: Set up Node.js
+        if: ${{ !inputs.use-npm-cache }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
 
       - name: Install dependencies
         if: inputs.install-command != ''
