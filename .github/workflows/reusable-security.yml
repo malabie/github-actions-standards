@@ -48,6 +48,14 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Install actionlint
+        if: steps.workflow_files.outputs.present == 'true'
+        run: |
+          VERSION="1.7.12"
+          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v${VERSION}/actionlint_${VERSION}_linux_amd64.tar.gz" \
+            | tar -xz actionlint
+          sudo mv actionlint /usr/local/bin/actionlint
+
       - name: Run actionlint
         if: steps.workflow_files.outputs.present == 'true'
-        uses: raven-actions/actionlint@v2
+        run: actionlint
