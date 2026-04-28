@@ -8,6 +8,8 @@ Reusable GitHub Actions workflows for repositories owned by `malabie`.
   - Gitleaks secret scanning on pushes and pull requests
   - Dependency review on pull requests
   - GitHub Actions workflow linting when workflow files are present
+- `reusable-node-ci.yml`
+  - Shared Node.js CI with configurable install, lint, typecheck, test, and build commands
 - `reusable-codeql-js.yml`
   - CodeQL scanning for JavaScript and TypeScript repositories that support GitHub code scanning
 

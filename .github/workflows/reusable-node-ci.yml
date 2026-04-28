@@ -1,0 +1,83 @@
+name: Reusable Node CI
+
+on:
+  workflow_call:
+    inputs:
+      job-name:
+        required: false
+        type: string
+        default: "Node CI"
+      working-directory:
+        required: false
+        type: string
+        default: "."
+      node-version:
+        required: false
+        type: string
+        default: "20"
+      cache-dependency-path:
+        required: false
+        type: string
+        default: ""
+      install-command:
+        required: false
+        type: string
+        default: ""
+      lint-command:
+        required: false
+        type: string
+        default: ""
+      typecheck-command:
+        required: false
+        type: string
+        default: ""
+      test-command:
+        required: false
+        type: string
+        default: ""
+      build-command:
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ${{ inputs.job-name }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.cache-dependency-path != '' && inputs.cache-dependency-path || format('{0}/package-lock.json', inputs.working-directory) }}
+
+      - name: Install dependencies
+        if: inputs.install-command != ''
+        run: ${{ inputs.install-command }}
+
+      - name: Lint
+        if: inputs.lint-command != ''
+        run: ${{ inputs.lint-command }}
+
+      - name: Typecheck
+        if: inputs.typecheck-command != ''
+        run: ${{ inputs.typecheck-command }}
+
+      - name: Test
+        if: inputs.test-command != ''
+        run: ${{ inputs.test-command }}
+
+      - name: Build
+        if: inputs.build-command != ''
+        run: ${{ inputs.build-command }}
