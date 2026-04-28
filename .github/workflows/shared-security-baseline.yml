@@ -1,0 +1,15 @@
+name: Security Baseline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    uses: malabie/github-actions-standards/.github/workflows/reusable-security.yml@main
+    secrets: inherit
